@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * mic.h
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -29,6 +29,6 @@
 
 extern TaskHandle_t mic_handle, FFT_handle;
 
-void display_microphone_tab(lv_obj_t* tv);
-void microphoneTask(void* pvParameters);
-void fft_show_task(void* pvParameters);
+void display_microphone_tab( lv_obj_t *tv );
+void microphoneTask( void *pvParameters );
+void fft_show_task( void *pvParameters );

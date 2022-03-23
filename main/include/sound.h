@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * sound.h
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -25,4 +25,4 @@
 
 #pragma once
 
-void sound_task(void* arg);
+void sound_task( void *arg );

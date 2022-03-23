@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * power.h
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -27,7 +27,7 @@
 
 #define POWER_TAB_NAME "AXP192-POWER"
 
-extern lv_obj_t* power_tab;
+extern lv_obj_t *power_tab;
 
 void display_power_tab();
-void battery_task(void* pvParameters);
+void battery_task( void *pvParameters );

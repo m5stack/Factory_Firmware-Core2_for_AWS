@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * sound.c
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -33,14 +33,15 @@
 
 #include "sound.h"
 
-void sound_task(void* arg) {
+void sound_task( void *pvParameters )
+{
     esp_err_t err = core2foraws_audio_speaker_enable( true );
     if ( err == ESP_OK )
     {    
-        extern const unsigned char music[120264];
+        extern const unsigned char music[ 120264 ];
         core2foraws_audio_speaker_write( ( const uint8_t * )music, 120264 );
         core2foraws_audio_speaker_enable( false );
     }
 
-    vTaskDelete(NULL); // Deletes the current task from FreeRTOS task list and the FreeRTOS idle task will remove from memory.
+    vTaskDelete( NULL ); // Deletes the current task from FreeRTOS task list and the FreeRTOS idle task will remove from memory.
 }

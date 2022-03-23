@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * mpu.h
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -29,5 +29,5 @@
 
 extern TaskHandle_t MPU_handle;
 
-void display_mpu_tab(lv_obj_t* tv);
-void MPU_task(void* pvParameters);
+void display_mpu_tab( lv_obj_t *tv );
+void MPU_task( void *pvParameters );

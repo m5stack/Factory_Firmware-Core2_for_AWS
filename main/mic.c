@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * mic.c
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -45,123 +45,137 @@ static const char *TAG = MICROPHONE_TAB_NAME;
 #define CANVAS_WIDTH 240
 #define CANVAS_HEIGHT 60
 
-static long map(long x, long in_min, long in_max, long out_min, long out_max) {
-    long divisor = (in_max - in_min);
-    if(divisor == 0){
+static long map( long x, long in_min, long in_max, long out_min, long out_max )
+{
+    long divisor = ( in_max - in_min );
+    if ( divisor == 0 )
+    {
         return -1;
     }
-    return (x - in_min) * (out_max - out_min) / divisor + out_min;
+    return ( x - in_min ) * ( out_max - out_min ) / divisor + out_min;
 }
 
-void display_microphone_tab(lv_obj_t* tv){
-    xSemaphoreTake(core2foraws_display_semaphore, portMAX_DELAY);   // Takes (blocks) the core2foraws_display_semaphore mutex from being read/written by another task.
+void display_microphone_tab( lv_obj_t *tv )
+{
+    xSemaphoreTake( core2foraws_display_semaphore, portMAX_DELAY );   // Takes the core2foraws_display_semaphore mutex. This blocks any other task attempting to take it before it's free'd from executing.
 
-    lv_obj_t* mic_tab = lv_tabview_add_tab(tv, MICROPHONE_TAB_NAME);  // Create a tab
+    lv_obj_t *mic_tab = lv_tabview_add_tab( tv, MICROPHONE_TAB_NAME );  // Create a LVGL tabview
 
     /* Create the main body object and set background within the tab*/
     static lv_style_t bg_style;
-    lv_obj_t* mic_bg = lv_obj_create(mic_tab, NULL);
-    lv_obj_align(mic_bg, NULL, LV_ALIGN_IN_TOP_LEFT, 16, 36);
-    lv_obj_set_size(mic_bg, 290, 190);
-    lv_obj_set_click(mic_bg, false);
-    lv_style_init(&bg_style);
-    lv_style_set_bg_color(&bg_style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
-    lv_obj_add_style(mic_bg, LV_OBJ_PART_MAIN, &bg_style);
+    lv_obj_t *mic_bg = lv_obj_create( mic_tab, NULL );
+    lv_obj_align( mic_bg, NULL, LV_ALIGN_IN_TOP_LEFT, 16, 36 );
+    lv_obj_set_size( mic_bg, 290, 190 );
+    lv_obj_set_click ( mic_bg, false );
+    lv_style_init( &bg_style );
+    lv_style_set_bg_color( &bg_style, LV_STATE_DEFAULT, LV_COLOR_BLACK );
+    lv_obj_add_style( mic_bg, LV_OBJ_PART_MAIN, &bg_style );
 
     /* Create the title within the main body object */
     static lv_style_t title_style;
-    lv_style_init(&title_style);
-    lv_style_set_text_font(&title_style, LV_STATE_DEFAULT, LV_THEME_DEFAULT_FONT_TITLE);
-    lv_style_set_text_color(&title_style, LV_STATE_DEFAULT, LV_COLOR_LIME);
-    lv_obj_t* tab_title_label = lv_label_create(mic_bg, NULL);
-    lv_obj_add_style(tab_title_label, LV_OBJ_PART_MAIN, &title_style);
-    lv_label_set_static_text(tab_title_label, "SPM1423 Microphone");
-    lv_obj_align(tab_title_label, mic_bg, LV_ALIGN_IN_TOP_MID, 0, 10);
+    lv_style_init( &title_style );
+    lv_style_set_text_font( &title_style, LV_STATE_DEFAULT, LV_THEME_DEFAULT_FONT_TITLE );
+    lv_style_set_text_color( &title_style, LV_STATE_DEFAULT, LV_COLOR_LIME );
+    lv_obj_t *tab_title_label = lv_label_create( mic_bg, NULL );
+    lv_obj_add_style( tab_title_label, LV_OBJ_PART_MAIN, &title_style );
+    lv_label_set_static_text( tab_title_label, "SPM1423 Microphone" );
+    lv_obj_align( tab_title_label, mic_bg, LV_ALIGN_IN_TOP_MID, 0, 10 );
 
     /* Create the sensor information label object */
-    lv_obj_t* body_label = lv_label_create(mic_bg, NULL);
-    lv_label_set_long_mode(body_label, LV_LABEL_LONG_BREAK);
-    lv_label_set_static_text(body_label, "The SPM1423 is an enhanced far-field MEMS microphone.\n\nSay \"Hi EduKit\"");
-    lv_obj_set_width(body_label, 252);
-    lv_obj_align(body_label, mic_bg, LV_ALIGN_IN_TOP_LEFT, 20, 40);
+    lv_obj_t *body_label = lv_label_create( mic_bg, NULL );
+    lv_label_set_long_mode( body_label, LV_LABEL_LONG_BREAK );
+    lv_label_set_static_text( body_label, "The SPM1423 is an enhanced far-field MEMS microphone.\n\nSay \"Hi EduKit\"" );
+    lv_obj_set_width( body_label, 252 );
+    lv_obj_align( body_label, mic_bg, LV_ALIGN_IN_TOP_LEFT, 20, 40 );
 
     static lv_style_t body_style;
-    lv_style_init(&body_style);
-    lv_style_set_text_color(&body_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-    lv_obj_add_style(body_label, LV_OBJ_PART_MAIN, &body_style);
+    lv_style_init( &body_style );
+    lv_style_set_text_color( &body_style, LV_STATE_DEFAULT, LV_COLOR_WHITE );
+    lv_obj_add_style( body_label, LV_OBJ_PART_MAIN, &body_style );
 
-    xSemaphoreGive(core2foraws_display_semaphore);
+    xSemaphoreGive( core2foraws_display_semaphore );
     
-    xTaskCreatePinnedToCore(fft_show_task, "fftShowTask", 4096 * 2, (void*)mic_tab, 1, &FFT_handle, 1);
+    xTaskCreatePinnedToCore( fft_show_task, "fftShowTask", 4096 * 2, ( void * )mic_tab, 1, &FFT_handle, 1 );
 }
 
-void microphoneTask(void* pvParameters) {
-    vTaskSuspend(NULL);
+void microphoneTask( void* pvParameters )
+{
+    vTaskSuspend( NULL );
 
-    static int8_t i2s_readraw_buff[1024];
+    static int8_t i2s_readraw_buff[ 1024 ];
     size_t bytesread;
-    int16_t* buffptr;
+    int16_t *buffptr;
     double data = 0;
-    uint8_t* fft_dis_buff = NULL;
+    uint8_t *fft_dis_buff = NULL;
     core2foraws_audio_mic_enable( true );
-    QueueHandle_t queue = (QueueHandle_t) pvParameters;
+    QueueHandle_t queue = ( QueueHandle_t ) pvParameters;
 
-    for (;;) {
-        fft_dis_buff = (uint8_t*)heap_caps_malloc(CANVAS_HEIGHT * sizeof(uint8_t), MALLOC_CAP_DEFAULT | MALLOC_CAP_SPIRAM);
-        memset(fft_dis_buff, 0, CANVAS_HEIGHT);
-        fft_config_t* real_fft_plan = fft_init(512, FFT_REAL, FFT_FORWARD, NULL, NULL);
-        i2s_read(I2S_NUM_0, (char*)i2s_readraw_buff, 1024, &bytesread, pdMS_TO_TICKS(100));
-        buffptr = (int16_t*)i2s_readraw_buff;
-        for (uint16_t count_n = 0; count_n < real_fft_plan->size; count_n++) {
-            real_fft_plan->input[count_n] = (float)map(buffptr[count_n], INT16_MIN, INT16_MAX, -1000, 1000);
+    for ( ; ; )
+    {
+        fft_dis_buff = ( uint8_t * )heap_caps_malloc( CANVAS_HEIGHT * sizeof( uint8_t ), MALLOC_CAP_DEFAULT | MALLOC_CAP_SPIRAM );
+        memset( fft_dis_buff, 0, CANVAS_HEIGHT );
+        fft_config_t *real_fft_plan = fft_init( 512, FFT_REAL, FFT_FORWARD, NULL, NULL );
+        i2s_read( I2S_NUM_0, ( char * )i2s_readraw_buff, 1024, &bytesread, pdMS_TO_TICKS( 100 ) );
+        buffptr = ( int16_t * )i2s_readraw_buff;
+        for ( uint16_t count_n = 0; count_n < real_fft_plan->size; count_n++ )
+        {
+            real_fft_plan->input[ count_n ] = ( float )map( buffptr[ count_n ], INT16_MIN, INT16_MAX, -1000, 1000 );
         }
-        fft_execute(real_fft_plan);
+        fft_execute( real_fft_plan );
 
-        for (uint16_t count_n = 1; count_n < CANVAS_HEIGHT; count_n++) {
-            data = sqrt(real_fft_plan->output[2 * count_n] * real_fft_plan->output[2 * count_n] + real_fft_plan->output[2 * count_n + 1] * real_fft_plan->output[2 * count_n + 1]);
-            fft_dis_buff[CANVAS_HEIGHT - count_n]  = map(data, 0, 2000, 0, 256);
+        for ( uint16_t count_n = 1; count_n < CANVAS_HEIGHT; count_n++ )
+        {
+            data = sqrt( real_fft_plan->output[ 2 * count_n ] * real_fft_plan->output[ 2 * count_n ] + real_fft_plan->output[ 2 * count_n + 1 ] * real_fft_plan->output[ 2 * count_n + 1 ] );
+            fft_dis_buff[ CANVAS_HEIGHT - count_n ]  = map( data, 0, 2000, 0, 256 );
         }
-        fft_destroy(real_fft_plan);
-        if(xQueueSend(queue, &fft_dis_buff, 0) != pdPASS) {
-            free(fft_dis_buff);
+        fft_destroy( real_fft_plan );
+        if ( xQueueSend( queue, &fft_dis_buff, 0 ) != pdPASS )
+        {
+            free( fft_dis_buff );
         }
     }
-    vTaskDelete(NULL); // Should never get to here...
+    vTaskDelete( NULL ); // Should never get to here...
 }
 
-void fft_show_task(void* pvParameters) {    
-    QueueHandle_t mic_queue = xQueueCreate(2, sizeof(uint8_t*));
-    xTaskCreatePinnedToCore(microphoneTask, "microphoneTask", 4096 * 2, (void*) mic_queue, 1, &mic_handle, 1);
+void fft_show_task( void *pvParameters )
+{    
+    QueueHandle_t mic_queue = xQueueCreate( 2, sizeof( uint8_t * ) );
+    xTaskCreatePinnedToCore( microphoneTask, "microphoneTask", 4096 * 2, ( void * ) mic_queue, 1, &mic_handle, 1 );
     
-    vTaskSuspend(NULL);
+    vTaskSuspend( NULL );
     static uint16_t position_data = 0;
     uint16_t color_position;
-    uint8_t* fft_dis_buff = heap_caps_malloc(sizeof (uint8_t) * CANVAS_HEIGHT, MALLOC_CAP_DEFAULT | MALLOC_CAP_SPIRAM);
+    uint8_t *fft_dis_buff = heap_caps_malloc( sizeof( uint8_t ) * CANVAS_HEIGHT, MALLOC_CAP_DEFAULT | MALLOC_CAP_SPIRAM );
     
-    xSemaphoreTake(core2foraws_display_semaphore, portMAX_DELAY);
-    lv_obj_t* canvas = lv_canvas_create((lv_obj_t*)pvParameters, NULL);
-    lv_color_t* cbuf = heap_caps_malloc(LV_CANVAS_BUF_SIZE_TRUE_COLOR(CANVAS_WIDTH, CANVAS_HEIGHT), MALLOC_CAP_DEFAULT | MALLOC_CAP_SPIRAM);
-    lv_canvas_set_buffer(canvas, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR);
-    lv_canvas_fill_bg(canvas, LV_COLOR_BLACK, LV_OPA_COVER);
-    lv_obj_align(canvas, (lv_obj_t*)pvParameters, LV_ALIGN_IN_BOTTOM_MID, 0, -18);
-    xSemaphoreGive(core2foraws_display_semaphore);
+    xSemaphoreTake( core2foraws_display_semaphore, portMAX_DELAY );
+    lv_obj_t *canvas = lv_canvas_create( ( lv_obj_t * )pvParameters, NULL );
+    lv_color_t *cbuf = heap_caps_malloc( LV_CANVAS_BUF_SIZE_TRUE_COLOR( CANVAS_WIDTH, CANVAS_HEIGHT ), MALLOC_CAP_DEFAULT | MALLOC_CAP_SPIRAM );
+    lv_canvas_set_buffer( canvas, cbuf, CANVAS_WIDTH, CANVAS_HEIGHT, LV_IMG_CF_TRUE_COLOR );
+    lv_canvas_fill_bg( canvas, LV_COLOR_BLACK, LV_OPA_COVER );
+    lv_obj_align( canvas, ( lv_obj_t * )pvParameters, LV_ALIGN_IN_BOTTOM_MID, 0, -18 );
+    xSemaphoreGive( core2foraws_display_semaphore );
 
-    extern const unsigned char color_map[768];
+    extern const unsigned char color_map[ 768 ];
     
-    for (;;) {
-        if(mic_queue != NULL){
-            xQueueReceive(mic_queue, &fft_dis_buff, 0);
-            for (uint16_t count_y = 0; count_y < CANVAS_HEIGHT; count_y++) {
-                color_position = fft_dis_buff[count_y];
-                xSemaphoreTake(core2foraws_display_semaphore, portMAX_DELAY);
-                lv_canvas_set_px(canvas, position_data, count_y, LV_COLOR_MAKE(color_map[color_position * 3 + 0], color_map[color_position * 3 + 1], color_map[color_position * 3 + 2]));
-                xSemaphoreGive(core2foraws_display_semaphore);
+    for ( ; ; )
+    {
+        if ( mic_queue != NULL )
+        {
+            xQueueReceive( mic_queue, &fft_dis_buff, 0 );
+            for( uint16_t count_y = 0; count_y < CANVAS_HEIGHT; count_y++ )
+            {
+                color_position = fft_dis_buff[ count_y ];
+                xSemaphoreTake( core2foraws_display_semaphore, portMAX_DELAY );
+                lv_canvas_set_px( canvas, position_data, count_y, 
+                    LV_COLOR_MAKE( color_map[ color_position * 3 + 0 ], color_map[ color_position * 3 + 1 ], color_map[ color_position * 3 + 2 ] ) );
+                xSemaphoreGive( core2foraws_display_semaphore );
             }
             position_data ++;
-            if (position_data == CANVAS_WIDTH) {
+            if ( position_data == CANVAS_WIDTH )
+            {
                 position_data = 0;
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay( pdMS_TO_TICKS( 10 ) );
     }
 }

@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * home.h
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -27,4 +27,4 @@
 
 #define HOME_TAB_NAME "HOME"
 
-void display_home_tab(lv_obj_t* tv);
+void display_home_tab( lv_obj_t *tv );

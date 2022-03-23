@@ -1,6 +1,6 @@
 /*
  * AWS IoT EduKit - Core2 for AWS IoT EduKit
- * Factory Firmware v2.2.0
+ * Factory Firmware v2.3.0
  * clock.h
  * 
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -32,4 +32,4 @@ TaskHandle_t clock_handle;
 
 void display_clock_tab();
 void update_roller_time();
-void clock_task(void* pvParameters);
+void clock_task( void *pvParameters );
