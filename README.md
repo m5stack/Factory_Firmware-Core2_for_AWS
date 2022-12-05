@@ -1,3 +1,5 @@
+> <b>Effective March 6, 2023, AWS will end support for AWS IoT EduKit, a program that guided builders on how to develop simple IoT applications with AWS Partner reference hardware and tutorials. AWS IoT EduKit’s reference hardware kit is made and sold by our manufacturing partner, M5Stack Technology Co., Ltd. (https://m5stack.com/), who will continue to offer and support the kit and related software for interested customers.</b>
+
 # M5Stack Core2 for AWS IoT EduKit Factory Firmware
 
 Factory firmware for the M5Stack Core2 for AWS IoT EduKit. Use this repository to restore your device to the original program or to investigate and freely modify.This application was written to be easy to understand and replicate instead of efficiency. View the [API reference](https://edukit.workshop.aws/en/api-reference/v2/index.html) for using the included board support package.
