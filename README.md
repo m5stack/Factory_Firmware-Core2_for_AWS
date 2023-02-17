@@ -1,8 +1,8 @@
-> <b>Effective March 6, 2023, AWS will end support for AWS IoT EduKit, a program that guided builders on how to develop simple IoT applications with AWS Partner reference hardware and tutorials. AWS IoT EduKit’s reference hardware kit is made and sold by our manufacturing partner, M5Stack Technology Co., Ltd. (https://m5stack.com/), who will continue to offer and support the kit and related software for interested customers.</b>
+> <b>Effective March 6, 2023, AWS will end support for AWS IoT Kit, a program that guided builders on how to develop simple IoT applications with AWS Partner reference hardware and tutorials. AWS IoT Kit’s reference hardware kit is made and sold by our manufacturing partner, M5Stack Technology Co., Ltd. (https://m5stack.com/), who will continue to offer and support the kit and related software for interested customers.</b>
 
-# M5Stack Core2 for AWS IoT EduKit Factory Firmware
+# M5Stack Core2 for AWS IoT Kit Factory Firmware
 
-Factory firmware for the M5Stack Core2 for AWS IoT EduKit. Use this repository to restore your device to the original program or to investigate and freely modify.This application was written to be easy to understand and replicate instead of efficiency. View the [API reference](https://edukit.workshop.aws/en/api-reference/v2/index.html) for using the included board support package.
+Factory firmware for the M5Stack Core2 for AWS IoT Kit. Use this repository to restore your device to the original program or to investigate and freely modify.This application was written to be easy to understand and replicate instead of efficiency. View the API reference for using the included board support package.
 
 ## Cloning
 This repo uses [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to bring in dependent components.
@@ -17,11 +17,11 @@ In addition to this, either enable [Developer Mode](https://docs.microsoft.com/e
 
 To clone using HTTPS:
 ```
-git clone https://github.com/aws-iot-edukit/Factory_Firmware-Core2_for_AWS.git --recurse-submodules
+git clone https://github.com/m5stack/Factory_Firmware-Core2_for_AWS.git --recurse-submodules
 ```
 Using SSH:
 ```
-git clone git@github.com:aws-iot-edukit/Factory_Firmware-Core2_for_AWS.git --recurse-submodules
+git clone git@github.com:m5stack/Factory_Firmware-Core2_for_AWS.git --recurse-submodules
 ```
 
 If you have downloaded the repo without using the `--recurse-submodules` argument, you need to run:
@@ -35,9 +35,9 @@ git submodule update --init --recursive
 
 This is the entry point for your application. Start by investigating and/or modifying this file for your needs.
 
-### components/Core2-for-AWS-IoT-EduKit
+### components/Core2-for-AWS-IoT-Kit
 
-This is the location of the [board support package](https://github.com/m5stack/Core2-for-AWS-IoT-EduKit). These include drivers and helper libraries for controlling the on-board peripherals on the device.
+This is the location of the [board support package](https://github.com/m5stack/Core2-for-AWS-IoT-Kit). These include drivers and helper libraries for controlling the on-board peripherals on the device.
 
 ### components/esp-cryptoauthlib
 
